@@ -1,14 +1,9 @@
-var express = require("express");
-var router = express.Router();
+const fs = require('fs');
 
-router.get("/", function(req, res, next) {
-  const data = {
-    data: {
-      msg: "Hello World"
-    }
-  };
 
-  res.json(data);
-});
 
-module.exports = router;
+module.exports = app => {
+    fs.readdirSync(`${__dirname}/api/`).forEach(file => {
+        require(`./api/${file.substr(0, file.indexOf('.'))}`)(app);
+    });
+};

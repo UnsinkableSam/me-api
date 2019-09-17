@@ -3,14 +3,17 @@ const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const cors = require("cors");
 
-//routes
-const index = require("./routes/index");
-const hello = require("./routes/hello");
+
+
 
 const app = express();
 const port = 1337;
 
 app.use(cors());
+
+
+//routes
+require('./routes')(app);
 
 if (process.env.NODE_ENV !== "test") {
   // use morgan to log at command line
@@ -18,28 +21,11 @@ if (process.env.NODE_ENV !== "test") {
 }
 
 // Add a route
-// app.get("/", (req, res) => {
-//   const data = {
-//     data: {
-//       msg: "Hello World"
-//     }
-//   };
-
-//   res.json(data);
-// });
-
-// app.get("/hello/:msg", (req, res) => {
-//   const data = {
-//     data: {
-//       msg: req.params.msg
-//     }
-//   };
-
-//   res.json(data);
-// });
-
-app.use("/", index);
-app.use("/hello", hello);
+// app.use("/", index);
+// app.use("/hello", hello);
+// app.use("/register/", register);
+// app.use("/login/", login);
+// app.use("/login/", login);
 
 // Start up server
 
