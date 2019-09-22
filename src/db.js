@@ -92,7 +92,7 @@ compare = (password, hash) => {
 
 signIn = async (mail) => {
     const payload = { email: mail };
-    const secret = "123";
+    
     const token = await jwt.sign(payload, secret, { expiresIn: '1h' });
     console.log(token);
     return token;
@@ -101,7 +101,7 @@ signIn = async (mail) => {
 
 
 verify = async (token, res) => {
-    let secret = "123";
+    
     jwt.verify(token, secret, function (err, decoded) {
         if (err) {
             return res.json("FAILED BITCH");
