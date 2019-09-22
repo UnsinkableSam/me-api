@@ -10,9 +10,9 @@ module.exports = (app) => {
         console.log(data);
         result = await passwordCompare(data);
         if (await result) {
-            res.json(await signIn(data.username));
+            return res.json(await signIn(data.username));
         } else {
-            res.json("Failed");
+            return res.json("Failed");
         }
 
     });

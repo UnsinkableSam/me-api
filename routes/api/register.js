@@ -12,7 +12,7 @@ module.exports = (app) => {
         };
         console.log(data);
         result = register(data);
-        res.status(200).json(result);
+        return res.status(200).json(result);
     });
 
 };
