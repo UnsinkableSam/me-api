@@ -41,7 +41,7 @@ module.exports = (app) => {
 
 
 
-    app.get("/report/week/:name", async function (req, res, next) {
+    app.get("/reports/week/:name", async function (req, res, next) {
         const data = {
             filename: req.params.name
         };
