@@ -31,8 +31,8 @@ module.exports = (app) => {
                 filename: req.body.filename,
                 file: req.body.file
             };
-            saveReport(data);
-            res.json("Success");
+            saveReport(data, res);
+            
         }
         
 

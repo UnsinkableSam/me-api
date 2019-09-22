@@ -8,12 +8,13 @@ const secret = process.env.JWT_SECRET;
 
 const converter = new showdown.Converter();
 
-
 register = async (data) => {
     await bcrypt.hash(data.password, saltRounds, function (err, hash) {
-        db.run("INSERT INTO users (email, password) VALUES (?, ?)",
+        db.run("INSERT INTO users (email, password, name, birth) VALUES (?, ?, ?, ?)",
             data.username,
-            hash, (err) => {
+            hash,
+            data.name,
+            data.birth, (err) => {
                 return err ? "Error" : "Success";
             });
     });
@@ -111,7 +112,7 @@ verify = async (token, res) => {
 }
 
 
-saveReport = async (data) => {
+saveReport = async (data, res) => {
 
     
     console.log(data.file);
@@ -121,6 +122,7 @@ saveReport = async (data) => {
             data.file, (err) => {
                 return err ? "Error" : "Success";
             });
+    // return res.json("Success");
     // return "Success1";
 } 
 
