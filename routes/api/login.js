@@ -1,15 +1,15 @@
 var db = require("../../src/db.js");
 
 module.exports = (app) => {
-    app.post("/login/:details", async function (req, res, next) {
-        var arr = JSON.parse(req.query.array);
+    app.post("/login/", async function (req, res, next) {
+        console.log(req.body);
         const data = {
-            "username": arr[0],
-            "password": arr[1]
-
+            username: req.body.username,
+            password: req.body.password
         };
+        console.log(data);
         result = await passwordCompare(data);
-        if (result) {
+        if (await result) {
             res.json(await signIn(data.username));
         } else {
             res.json("Failed");
@@ -18,6 +18,9 @@ module.exports = (app) => {
     });
 
 };
+
+
+
 
 
 

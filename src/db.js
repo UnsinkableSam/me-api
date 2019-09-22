@@ -1,3 +1,4 @@
+const showdown = require('showdown');
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('./db/texts.sqlite');
 const bcrypt = require('bcrypt');
@@ -5,16 +6,18 @@ const saltRounds = 10;
 const jwt = require('jsonwebtoken');
 const secret = process.env.JWT_SECRET;
 
+const converter = new showdown.Converter();
 
 
 register = async (data) => {
-    await bcrypt.hash(data[1], saltRounds, function (err, hash) {
+    await bcrypt.hash(data.password, saltRounds, function (err, hash) {
         db.run("INSERT INTO users (email, password) VALUES (?, ?)",
-            data[0],
+            data.username,
             hash, (err) => {
                 return err ? "Error" : "Success";
             });
     });
+    return "Success";
 } 
 
 
@@ -43,6 +46,38 @@ get = (sql, params = []) => {
   })
 }
 
+
+
+
+update = (sql, params = []) => {
+    return new Promise((resolve, reject) => {
+        db.run(sql, params, (err, result) => {
+            if (err) {
+                console.log('Error running sql: ' + sql)
+                console.log(err)
+                reject(err)
+            } else {
+                resolve(result)
+            }
+        })
+    })
+}
+
+
+getAll = (sql, params = []) => {
+    return new Promise((resolve, reject) => {
+        db.all(sql, params, (err, result) => {
+            if (err) {
+                console.log('Error running sql: ' + sql)
+                console.log(err)
+                reject(err)
+            } else {
+                resolve(result)
+            }
+        })
+    })
+}
+
 compare = (password, hash) => {
     return new Promise((resolve, error) => {
         bcrypt.compare(password, hash, (err, success) => {
@@ -56,6 +91,7 @@ compare = (password, hash) => {
 
 signIn = async (mail) => {
     const payload = { email: mail };
+    const secret = "123";
     const token = await jwt.sign(payload, secret, { expiresIn: '1h' });
     console.log(token);
     return token;
@@ -63,12 +99,97 @@ signIn = async (mail) => {
 
 
 
-verify = async () => {
-    jwt.verify(token, process.env.JWT_SECRET, function (err, decoded) {
+verify = async (token, res) => {
+    let secret = "123";
+    jwt.verify(token, secret, function (err, decoded) {
         if (err) {
-            return false; 
+            return res.json("FAILED BITCH");
         }
-
-        return true;
+        next();
+        // return true;
     });
+}
+
+
+saveReport = async (data) => {
+
+    
+    console.log(data.file);
+    console.log("hello");
+        db.run("INSERT INTO reports (filename, filetext) VALUES (?, ?)",
+            data.filename,
+            data.file, (err) => {
+                return err ? "Error" : "Success";
+            });
+    // return "Success1";
+} 
+
+
+getReportNames = async (data) => {
+
+    
+    console.log(data.filename);
+    console.log("Hello");
+    
+    const sql = "Select filename From reports";
+    const text = await getAll(sql, data.filename)
+    
+        console.log(text);
+        
+        return text;
+
+    
+    
+}
+
+
+
+getReports = async (data) => {
+
+
+    console.log(data.filename);
+    console.log("Hello1");
+
+    const sql = "Select filetext From reports WHERE filename=?";
+    const text = await get(sql, data.filename)
+
+    console.log(text);
+    console.log("loool");
+    text.data = converter.makeHtml(text.filetext);
+    return text.data;
+
+
+
+}
+
+getTextMarkdown = async (data) => {
+
+
+    console.log(data.filename);
+    console.log("Hello1");
+
+    const sql = "Select filetext From reports WHERE filename=?";
+    const text = await get(sql, data.filename)
+
+    console.log(text);
+    console.log("loool");
+    // text.data = converter.makeHtml(text.filetext);
+    return text;
+
+
+
+}
+
+
+updateMarkdown = async (data) => {
+
+    let parm = [data.filetext, data.filename];
+    console.log(parm);
+    const sql = "UPDATE reports SET filetext = ? WHERE filename=?";
+    await update(sql, parm);
+
+    
+
+
+
 }

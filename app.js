@@ -12,6 +12,8 @@ const port = 1337;
 app.use(cors());
 
 
+app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+app.use(bodyParser.json()); // for parsing application/json
 //routes
 require('./routes')(app);
 
@@ -20,18 +22,12 @@ if (process.env.NODE_ENV !== "test") {
   app.use(morgan("combined")); // 'combined' outputs the Apache style LOGs
 }
 
-// Add a route
-// app.use("/", index);
-// app.use("/hello", hello);
-// app.use("/register/", register);
-// app.use("/login/", login);
-// app.use("/login/", login);
 
 // Start up server
 
 app.listen(port, () => console.log(`Example API listening on port ${port}!`));
-app.use(bodyParser.json()); // for parsing application/json
-app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+
+
 // Add routes for 404 and error handling
 // Catch 404 and forward to error handler
 // Put this last
