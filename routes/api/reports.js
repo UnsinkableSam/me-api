@@ -4,9 +4,9 @@
 
 
 
-// mayb reports work now?
+
 module.exports = (app) => {
-    app.post("/addReports/", async function (req, res, next) {
+    app.post("/reports", async function (req, res, next) {
         const token = req.headers['sexbomb'];
         if (verify(token, res)) {
             const data = {
@@ -45,7 +45,7 @@ module.exports = (app) => {
     });
 
 
-    app.get("/reports", async function (req, res, next) {
+    app.get("/reports/names", async function (req, res, next) {
         const data = {
             filename: req.params.name
         };
