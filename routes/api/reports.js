@@ -4,7 +4,7 @@
 
 
 
-
+// mayb reports work now?
 module.exports = (app) => {
     app.post("/addReports/", async function (req, res, next) {
         const token = req.headers['sexbomb'];
