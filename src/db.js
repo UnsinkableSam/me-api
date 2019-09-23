@@ -99,7 +99,7 @@ signIn = async (mail) => {
 
 
 
-verify = async (token, res) => {
+verify = async (token, res, next) => {
     
     jwt.verify(token, secret, function (err, decoded) {
         if (err) {
