@@ -92,7 +92,7 @@ compare = (password, hash) => {
 
 signIn = async (mail) => {
     const payload = { email: mail };
-    
+    let secret = process.env.JWT_SECRET;
     const token = await jwt.sign(payload, secret, { expiresIn: '1h' });
     console.log(token);
     return token;
