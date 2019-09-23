@@ -4,7 +4,7 @@ const db = new sqlite3.Database('./db/texts.sqlite');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const jwt = require('jsonwebtoken');
-const secret = process.env.JWT_SECRET;
+const secret = process.env.JWT_SECRET ? process.env.JWT_SECRET : "123";
 
 const converter = new showdown.Converter();
 
@@ -92,7 +92,6 @@ compare = (password, hash) => {
 
 signIn = async (mail) => {
     const payload = { email: mail };
-    let secret = process.env.JWT_SECRET;
     const token = await jwt.sign(payload, secret, { expiresIn: '1h' });
     console.log(token);
     return token;
