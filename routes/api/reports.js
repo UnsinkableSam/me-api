@@ -1,4 +1,5 @@
 
+var dbFunctions = require("../../src/db.js");
 
 
 
@@ -8,14 +9,16 @@
 module.exports = (app) => {
     app.post("/reports", async function (req, res, next) {
         const token = req.headers['sexbomb'];
-        if (verify(token, res)) {
+        if (verify(token, res, next)) {
             const data = {
                 filename: req.body.filename,
                 file: req.body.file
             };
-            saveReport(data, res);
+            // console.log( await saveReport(data, res));
+             return res.json(await saveReport(data, res));
             
         }
+       
         
 
 
@@ -29,6 +32,7 @@ module.exports = (app) => {
         };
 
         const resend = await getTextMarkdown(data);
+        console.log(resend);
         return res.send(resend);
 
     });
@@ -63,13 +67,16 @@ module.exports = (app) => {
 
     app.post("/updateReports", async function (req, res, next) {
         const token = req.headers['sexbomb'];
-        verify(token, res);
-        if (verify(token, res)) {
+        
+        
+        // verify(token, res, next);
+        if (verify(token, res , next)) {
             const data = {
                 filename: req.body.filename,
                 filetext: req.body.file
             };
 
+            
 
             const resend = await updateMarkdown(data);
             return res.json("Updated");

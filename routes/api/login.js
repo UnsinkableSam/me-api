@@ -1,4 +1,4 @@
-var db = require("../../src/db.js");
+var dbFunctions = require("../../src/db.js");
 
 module.exports = (app) => {
     app.post("/login/", async function (req, res, next) {

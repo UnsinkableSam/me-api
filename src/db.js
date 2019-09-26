@@ -1,6 +1,14 @@
 const showdown = require('showdown');
 const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database('./db/texts.sqlite');
+
+
+// const db = new sqlite3.Database('./db/texts.sqlite');
+
+const path = process.env.NODE_ENV === 'test' 
+        ? './db/test.sqlite'
+        :'./db/texts.sqlite';
+        console.log(path);
+const db = new sqlite3.Database(path);
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const jwt = require('jsonwebtoken');
@@ -8,25 +16,31 @@ const secret = process.env.JWT_SECRET ? process.env.JWT_SECRET : "123";
 
 const converter = new showdown.Converter();
 
-register = async (data) => {
-    await bcrypt.hash(data.password, saltRounds, function (err, hash) {
-        db.run("INSERT INTO users (email, password, name, birth) VALUES (?, ?, ?, ?)",
-            data.username,
-            hash,
-            data.name,
-            data.birth, (err) => {
-                return err ? "Error" : "Success";
-            });
-    });
-    return "Success";
+register  = (data) => {
+
+    let sql = "INSERT INTO users (email, password, name, birth) VALUES (?, ?, ?, ?)";
+
+    return new Promise((resolve, reject) => {
+        bcrypt.hash(data[1], saltRounds, function (err, hash) {
+            data[1] = hash;
+        
+
+            db.run(sql, data, (err, result) => {
+                if (err) {
+                    return reject("Failed");
+                } else {
+                    return resolve("Success");        
+                }
+            })
+        })
+        
+    })
+
 } 
 
 
 
 passwordCompare = async (data) => {
-    // We get password from db with username. 
-    // db Password => hash compare to data[0] loginform password
-    // Return true or false
     let sql = "Select password From users WHERE email=?";
 
     user = await get(sql, data.username);
@@ -101,13 +115,21 @@ signIn = async (mail) => {
 
 verify = async (token, res, next) => {
     
+    if (process.env.NODE_ENV === 'test') {
+        return true;
+    }
+
     jwt.verify(token, secret, function (err, decoded) {
-        if (err) {
-            return res.json("FAILED BITCH");
+ 
+        if (err && process.env.NODE_ENV !== 'test') {
+            return res.json("failed");
         }
+
+        
         next();
-        // return true;
     });
+    
+  
 }
 
 
@@ -121,22 +143,15 @@ saveReport = async (data, res) => {
             data.file, (err) => {
                 return err ? "Error" : "Success";
             });
-    // return res.json("Success");
+    return res.json("Success");
     // return "Success1";
 } 
 
 
 getReportNames = async (data) => {
-
-    
-    console.log(data.filename);
-    console.log("Hello");
-    
     const sql = "Select filename From reports";
     const text = await getAll(sql, data.filename)
-    
-        console.log(text);
-        
+
         return text;
 
     
@@ -146,16 +161,9 @@ getReportNames = async (data) => {
 
 
 getReports = async (data) => {
-
-
-    console.log(data.filename);
-    console.log("Hello1");
-
     const sql = "Select filetext From reports WHERE filename=?";
     const text = await get(sql, data.filename)
 
-    console.log(text);
-    console.log("loool");
     text.data = converter.makeHtml(text.filetext);
     return text.data;
 
@@ -164,17 +172,8 @@ getReports = async (data) => {
 }
 
 getTextMarkdown = async (data) => {
-
-
-    console.log(data.filename);
-    console.log("Hello1");
-
     const sql = "Select filetext From reports WHERE filename=?";
     const text = await get(sql, data.filename)
-
-    console.log(text);
-    console.log("loool");
-    // text.data = converter.makeHtml(text.filetext);
     return text;
 
 
