@@ -15,7 +15,8 @@ module.exports = (app) => {
                 file: req.body.file
             };
             // console.log( await saveReport(data, res));
-             return res.json(await saveReport(data, res));
+            const send = await saveReport(data, res);
+             return res.json(send);
             
         }
        
