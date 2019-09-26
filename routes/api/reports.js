@@ -15,8 +15,14 @@ module.exports = (app) => {
                 file: req.body.file
             };
             // console.log( await saveReport(data, res));
-            const send = await saveReport(data, res);
-             return res.json(send);
+            let promise = saveReport(data);
+            promise.then(function (value) {
+                return res.status(200).json(value);
+            })
+
+            promise.catch(error => {
+                return res.status(200).json(error);
+            });
             
         }
        

@@ -136,15 +136,29 @@ verify = async (token, res, next) => {
 saveReport = async (data, res) => {
 
     
-    console.log(data.file);
-    console.log("hello");
-        db.run("INSERT INTO reports (filename, filetext) VALUES (?, ?)",
-            data.filename,
-            data.file, (err) => {
-                return err ? "Error" : "Success";
-            });
-    return res.json("Success");
-    // return "Success1";
+    // console.log(data.file);
+    // console.log("hello");
+    //     db.run("INSERT INTO reports (filename, filetext) VALUES (?, ?)",
+    //         data.filename,
+    //         data.file, (err) => {
+    //             return err ? "Error" : "Success";
+    //         });
+    // return res.json("Success");
+    // // return "Success1";
+    let sql = "INSERT INTO reports (filename, filetext) VALUES (?, ?)";
+    console.log(data);
+
+    return new Promise((resolve, reject) => {
+            db.run(sql, data, (err, result) => {
+                if (err) {
+                    return reject("Failed");
+                } else {
+                    return resolve("Success");
+                }
+            })
+     
+
+    })
 } 
 
 
