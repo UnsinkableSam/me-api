@@ -8,8 +8,8 @@ var dbFunctions = require("../../src/db.js");
 
 module.exports = (app) => {
     app.post("/reports", async function (req, res, next) {
-        // const token = req.headers['sexbomb'];
-        const token = "hello";
+        const token = req.headers['sexbomb'];
+       
         // (req, res, next) => verify(token, res, next);
         const verified = verify(token, res, next);
         verified.then( (result) => {
