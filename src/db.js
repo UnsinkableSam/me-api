@@ -116,13 +116,16 @@ signIn = async (mail) => {
 verify = async (token, res, next) => {
     
     if (process.env.NODE_ENV === 'test') {
+        
+       
         return true;
     }
+     
 
     jwt.verify(token, secret, function (err, decoded) {
  
-        if (err && process.env.NODE_ENV !== 'test') {
-            return res.json("failed");
+        if (err) {
+            return false;
         }
 
         
@@ -134,31 +137,13 @@ verify = async (token, res, next) => {
 
 
 saveReport = async (data, res) => {
+        db.run("INSERT INTO reports (filename, filetext) VALUES (?, ?)",
+            data.filename,
+            data.file, (err) => {
+                return err ? "Error" : "Success";
+            });
+    return "Success";
 
-    
-    // console.log(data.file);
-    // console.log("hello");
-    //     db.run("INSERT INTO reports (filename, filetext) VALUES (?, ?)",
-    //         data.filename,
-    //         data.file, (err) => {
-    //             return err ? "Error" : "Success";
-    //         });
-    // return res.json("Success");
-    // // return "Success1";
-    let sql = "INSERT INTO reports (filename, filetext) VALUES (?, ?)";
-    console.log(data);
-
-    return new Promise((resolve, reject) => {
-            db.run(sql, data, (err, result) => {
-                if (err) {
-                    return reject("Failed");
-                } else {
-                    return resolve("Success");
-                }
-            })
-     
-
-    })
 } 
 
 

@@ -17,8 +17,8 @@ describe('Reports', () => {
                 .post("/reports")
                 .set('content-type', 'application/x-www-form-urlencoded')
                 .send({
-                    filename: "hello",
-                    file: "hello"
+                    filename: "hello133722234",
+                    file: "hello1337"
                 })
                 .end((err, res) => {
                     console.log(res.body);

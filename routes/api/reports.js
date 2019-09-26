@@ -8,23 +8,39 @@ var dbFunctions = require("../../src/db.js");
 
 module.exports = (app) => {
     app.post("/reports", async function (req, res, next) {
-        const token = req.headers['sexbomb'];
-        if (verify(token, res, next)) {
-            const data = {
-                filename: req.body.filename,
-                file: req.body.file
-            };
-            // console.log( await saveReport(data, res));
-            let promise = saveReport(data);
-            promise.then(function (value) {
-                return res.status(200).json(value);
-            })
-
-            promise.catch(error => {
-                return res.status(200).json(error);
-            });
+        // const token = req.headers['sexbomb'];
+        const token = "hello";
+        // (req, res, next) => verify(token, res, next);
+        const verified = verify(token, res, next);
+        verified.then( (result) => {
             
-        }
+            if (result) {
+                console.log(result);
+
+                const data = {
+                    filename: req.body.filename,
+                    file: req.body.file
+                };
+
+
+                
+                
+                let promise = saveReport(data);
+                promise.then(function (value) {
+                    return res.status(200).json(value);
+                }).catch(error => {
+                    return res.status(500).json("missing authentication");
+                });
+                
+            } 
+            
+            // 
+
+        })
+        
+        
+            
+        // }
        
         
 
