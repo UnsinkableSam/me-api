@@ -3,7 +3,7 @@ var dbFunctions = require("../../src/db.js");
 
 module.exports = (app) => {
     app.post("/register/", async function (req, res, next) {
-        const data = [];
+        let data = [];
         data[0] =  req.body.email;
         data[1] =  req.body.password;
         data[2] = req.body.name;
