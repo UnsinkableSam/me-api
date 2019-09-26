@@ -4,7 +4,7 @@
   "description": "jsramverk me-api \u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D course me-api",
   "main": "index.js",
   "scripts": {
-    "test": "nyc mocha --exit './test/**/*.js'",
+    "test": "nyc --reporter=html --reporter=text mocha --exit './test/**/*.js'",
     "start": "nodemon app.js",
     "production": "NODE_ENV='production' node app.js"
   },
