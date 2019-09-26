@@ -118,19 +118,21 @@ verify = async (token, res, next) => {
     if (process.env.NODE_ENV === 'test') {
         
        
-        return true;
+        next();
     }
      
 
     jwt.verify(token, secret, function (err, decoded) {
- 
+        console.log("lol");
         if (err) {
-            return false;
+            console.log(err);
         }
 
         
         next();
+        
     });
+ 
     
   
 }
