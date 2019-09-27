@@ -9,14 +9,15 @@ var dbFunctions = require("../../src/db.js");
 module.exports = (app) => {
     app.post("/reports", async function (req, res, next) {
         const token = req.headers['sexbomb'];
-       
+        let status;
+        let msg;
+       console.log(req.body);
         // (req, res, next) => verify(token, res, next);
         const verified = verify(token, res, next);
         verified.then( (result) => {
+            console.log("hello");
             
-            if (result) {
-                console.log(result);
-
+              
                 const data = {
                     filename: req.body.filename,
                     file: req.body.file
@@ -27,12 +28,14 @@ module.exports = (app) => {
                 
                 let promise = saveReport(data);
                 promise.then(function (value) {
-                    return res.status(200).json(value);
+                    msg = value;
+                    status = 200;
                 }).catch(error => {
-                    return res.status(500).json("missing authentication");
+                    msg = "missing authentication";
+                    status = 500;
                 });
-                
-            } 
+                return res.status(status).json(msg);
+            
             
             // 
 

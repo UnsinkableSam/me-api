@@ -27,6 +27,7 @@ register  = (data) => {
 
             db.run(sql, data, (err, result) => {
                 if (err) {
+                    console.log(err);
                     return reject("Failed");
                 } else {
                     return resolve("Success");        
@@ -126,6 +127,7 @@ verify = async (token, res, next) => {
         console.log("lol");
         if (err) {
             console.log(err);
+            
         }
 
         
