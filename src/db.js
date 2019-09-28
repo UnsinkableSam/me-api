@@ -1,3 +1,4 @@
+
 const showdown = require('showdown');
 const sqlite3 = require('sqlite3').verbose();
 
@@ -115,38 +116,48 @@ signIn = async (mail) => {
 
 
 verify = async (token, res, next) => {
-    
-    if (process.env.NODE_ENV === 'test') {
+    console.log("hello");
+    if (process.env.NODE_ENV !== 'test') {
         
-       
+        jwt.verify(token, secret, function (err, decoded) {
+            console.log("lol");
+            if (err) {
+                console.log(err);
+
+            }
+
+
+            next();
+
+        });
+        
+        
+    } else if (process.env.NODE_ENV === 'test') {
         next();
+        return true;
     }
      
 
-    jwt.verify(token, secret, function (err, decoded) {
-        console.log("lol");
-        if (err) {
-            console.log(err);
-            
-        }
-
-        
-        next();
-        
-    });
+    
  
     
   
 }
 
 
-saveReport = async (data, res) => {
+saveReport =  (data, res) => {
+    console.log("hellooooooooooooooooo");
+    return new Promise((resolve, error) => {
         db.run("INSERT INTO reports (filename, filetext) VALUES (?, ?)",
             data.filename,
             data.file, (err) => {
-                return err ? "Error" : "Success";
+                console.error(err);
             });
-    return "Success";
+        resolve("success")
+    })
+
+
+  
 
 } 
 

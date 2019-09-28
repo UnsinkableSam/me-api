@@ -7,48 +7,76 @@ var dbFunctions = require("../../src/db.js");
 
 
 module.exports = (app) => {
-    app.post("/reports", async function (req, res, next) {
-        const token = req.headers['sexbomb'];
-        let status;
-        let msg;
-       console.log(req.body);
-        // (req, res, next) => verify(token, res, next);
-        const verified = verify(token, res, next);
-        verified.then( (result) => {
-            console.log("hello");
-            
-              
-                const data = {
+
+    app.post("/reports", (req, res, next) => verify(req, res, next), (req, res) => { 
+              const data = {
                     filename: req.body.filename,
                     file: req.body.file
                 };
+            console.log(data);
 
 
-                
-                
-                let promise = saveReport(data);
-                promise.then(function (value) {
-                    msg = value;
-                    status = 200;
+
+
+            saveReport(data).then(function (value) {
+                    console.log(value);
+                    // msg = value;
+                    // status = 200;
+                    return res.status(200).json("Success");
+
                 }).catch(error => {
-                    msg = "missing authentication";
-                    status = 500;
+                    console.log(error);
+                    return res.status(500).json("missing authentication");
+
+
                 });
-                return res.status(status).json(msg);
-            
-            
-            // 
-
-        })
-        
-        
-            
-        // }
-       
-        
-
-
     });
+
+    // app.post("/reports", async function (req, res, next) {
+    //     const token = req.headers['sexbomb'] ;
+        
+    //    console.log(req.body);
+        
+        // verify(token, res, next).then( async (result) => {
+        //    console.log(result);
+        //     let status = 500;
+        //     let msg = "hello";
+              
+        //         const data = {
+        //             filename: req.body.filename,
+        //             file: req.body.file
+        //         };
+        //     console.log(data);
+
+                
+            
+               
+        //     saveReport(data).then(function (value) {
+        //             console.log(value);
+        //             // msg = value;
+        //             // status = 200;
+        //             return res.status(200).json({"hej": "hej"});
+                    
+        //         }).catch(error => {
+        //             msg = "missing authentication";
+        //             status = 200;
+        //             console.log(error);
+                    
+                    
+        //         });
+                
+            
+            
+        //     // 
+            
+        // })
+        
+       
+            
+  
+
+
+    // });
 
 
 
@@ -90,27 +118,28 @@ module.exports = (app) => {
 
 
 
-
-    app.post("/updateReports", async function (req, res, next) {
+    app.post("/updateReports", (req, res, next) => verify(req, res, next), (req, res) => { 
+    // app.post("/updateReports", async function (req, res, next) {
         const token = req.headers['sexbomb'];
         
         
-        // verify(token, res, next);
-        if (verify(token, res , next)) {
+
+
+       
             const data = {
                 filename: req.body.filename,
                 filetext: req.body.file
             };
-
-            
-
-            const resend = await updateMarkdown(data);
-            return res.json("Updated");
-        }
-        return res.json("failed");
+            updateMarkdown(data);
+            status = 200;
+            msg = "Updated";
+       
+       
         
      
-
+        return res.status(status).json(msg);
+        
     });
 
+    
 };

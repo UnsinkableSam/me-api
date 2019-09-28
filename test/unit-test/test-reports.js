@@ -3,7 +3,8 @@ process.env.NODE_ENV = 'test';
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../../app.js');
-
+const sqlite3 = require('sqlite3').verbose();
+const db = new sqlite3.Database('./db/test.sqlite');
 
 chai.should();
 
@@ -12,13 +13,30 @@ chai.use(chaiHttp);
 describe('Reports', () => {
 
     describe('Post reports', () => {
-        it('Success reports', (done) => {
+        before((done) => {
+            console.log("Deleting report in test database")
+            return new Promise(() => {
+                db.run(`DELETE  from reports where filename = 'testingfile'`, (err) => {
+                    if (err) {
+                        console.log("Couldn't delete report testinfile");
+                    }
+
+                })
+                done();
+            })
+
+        })
+
+
+
+
+        it('Success Reports', (done) => {
             chai.request(server)
                 .post("/reports")
-                .set('content-type', 'application/x-www-form-urlencoded')
+                .set('sexbomb', '23')
                 .send({
-                    filename: "hello133722234",
-                    file: "hello1337"
+                    filename: "testingfile",
+                    file: "test test"
                 })
                 .end((err, res) => {
                     console.log(res.body);
@@ -79,8 +97,8 @@ describe('Reports', () => {
                 .post("/updateReports")
                 .set('content-type', 'application/x-www-form-urlencoded')
                 .send({
-                    filename: "testFilnamn12",
-                    file: "testFilnamn12",
+                    filename: "testingfile",
+                    file: "testingfile",
                 })
                 .end((err, res) => {
                     console.log(res.body);
