@@ -5,6 +5,8 @@
 
 [![Build Status](https://scrutinizer-ci.com/g/UnsinkableSam/me-api/badges/build.png?b=master)](https://scrutinizer-ci.com/g/UnsinkableSam/me-api/build-status/master)
 
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/UnsinkableSam/me-api/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/UnsinkableSam/me-api/?branch=master)
+
 #### INSTALL
 Clone repo `git clone https://github.com/UnsinkableSam/me-application.git `.
 Install dependencies `npm install`
